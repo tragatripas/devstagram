@@ -1,38 +1,43 @@
 import Dropzone from "dropzone";
-
 Dropzone.autoDiscover = false;
 
-const dropzone = new Dropzone("#dropzone", {
-  dictDefaultMessage: "sube aqui tu imagen",
-  acceptedFiles: ".png, .jpg, .jpeg, .gif",
-  addRemoveLinks: true,
-  dictRemoveFile: "Eliminar archivo",
-  maxFiles: 1,
-  uploadMultiple: false,
+document.addEventListener('DOMContentLoaded', function () {
+  const inputImagen = document.querySelector('input[name="imagen"]');
+  const dropzoneElement = document.querySelector("#dropzone");
 
-  init: function () {
-    if(document.querySelector('[name="imagen"]').value.trim()) {
-      const imagenPublicada = {};
-      imagenPublicada.size = 1234; // Tamaño del archivo en bytes
-      imagenPublicada.name = document.querySelector('[name="imagen"]').value; // Nombre del archivo
-      
-      this.options.addedfile.call(this, imagenPublicada);
-      this.options.thumbnail.call(this, imagenPublicada, `/uploads/${imagenPublicada.name}`);
+  if (!dropzoneElement) return;
 
-      imagenPublicada.previewElement.classList.add("dz-success", "dz-complete");
+  const dropzone = new Dropzone(dropzoneElement, {
+    dictDefaultMessage: "sube aqui tu imagen",
+    acceptedFiles: ".png, .jpg, .jpeg, .gif",
+    addRemoveLinks: true,
+    dictRemoveFile: "Eliminar archivo",
+    maxFiles: 1,
+    uploadMultiple: false,
 
+    init: function () {
+      if (inputImagen && inputImagen.value.trim()) {
+        const imagenPublicada = {
+          size: 1234, // Tamaño ficticio o real si lo tienes
+          name: inputImagen.value
+        };
+
+        this.options.addedfile.call(this, imagenPublicada);
+        this.options.thumbnail.call(this, imagenPublicada, `/uploads/${imagenPublicada.name}`);
+        imagenPublicada.previewElement.classList.add("dz-success", "dz-complete");
+      }
     }
-  }
+  });
 
-});
+  dropzone.on("success", function (file, response) {
+    if (inputImagen) {
+      inputImagen.value = response.imagen;
+    }
+  });
 
-dropzone.on("success", function (file, response) {
-  document.querySelector('[name="imagen"]').value = response.imagen;
-  // Aquí puedes manejar la respuesta del servidor
-  // Por ejemplo, mostrar un mensaje de éxito o actualizar la vista
-}
-);
-
-dropzone.on("removedfile", function () {
-  document.querySelector('[name="imagen"]').value = '';
+  dropzone.on("removedfile", function () {
+    if (inputImagen) {
+      inputImagen.value = '';
+    }
+  });
 });

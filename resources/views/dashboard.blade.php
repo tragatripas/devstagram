@@ -15,11 +15,28 @@
 
         <!-- Contenido -->
         <div class="md:w-8/12 lg:w-6/12 px-5 flex flex-col items-center md:justify-center md:items-start py-10">
-            
+            @if (session('mensaje'))
+                <div id="mensaje-flash" class="bg-green-500 text-white p-2 rounded-lg mb-6 text-center uppercase font-bold">
+                    {{ session('mensaje') }}
+                </div>
+
+                <script>
+                    setTimeout(() => {
+                        const mensaje = document.getElementById('mensaje-flash');
+                        if (mensaje) {
+                             mensaje.style.transition = "opacity 0.5s ease";
+                            mensaje.style.opacity = 0;
+
+                            setTimeout(() => mensaje.remove(), 500); // lo quita del DOM tras desvanecer
+                        }
+                    }, 2000);
+                </script>
+                        
+            @endif
             <div class="flex items-center gap-2">
 
                 <p class="text-gray-700 text-2xl mb-4">{{ $user->username }}</p>
-                
+                   
                 @auth
                 @if ($user->id === auth()->user()->id)
                     <a href="{{ route('perfil.index') }}" class="text-gray-500 hover:text-gray-700 cursor-pointer">
