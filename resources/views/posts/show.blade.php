@@ -83,23 +83,31 @@
                         />
                     </form>
                 @endauth
-
-                <div class="bg-white shadow mb-5 max-h-96 overflow-y-scroll mt-10">
+                <div class="bg-white shadow mb-5 max-h-96 overflow-y-scroll mt-10 gap-2">
                     @if ($post->comentarios->count())
                         @foreach ($post->comentarios as $comentario)
-                            <div class="p-5 border-gray-300 border-b">
-                                <a href="{{ route('posts.index', $comentario->user) }}" class="font-bold">
-                                    {{ $comentario->user->username }}
-                                </a>
-                                <p> {{ $comentario->comentario }}</p>
-                                <p class="text-sm text-gray-500"> {{ $comentario->created_at->diffForHumans() }}</p>
+                            <div class="flex items-start border-b border-gray-300 p-5">
+                                {{-- Imagen a la izquierda --}}
+                                <img 
+                                    class="rounded-full w-16 h-16 object-cover mr-4" 
+                                    src="{{ $comentario->user->imagen ? asset('perfiles/' . $comentario->user->imagen) : asset('img/usuario.svg') }}" 
+                                    alt="imagen usuario"
+                                >
+                                {{-- Contenido del comentario --}}
+                                <div>
+                                    <a href="{{ route('posts.index', $comentario->user) }}" class="font-bold block">
+                                        {{ $comentario->user->username }}
+                                    </a>
+                                    <p>{{ $comentario->comentario }}</p>
+                                    <p class="text-sm text-gray-500">{{ $comentario->created_at->diffForHumans() }}</p>
+                                </div>
                             </div>
-                            
                         @endforeach
                     @else
                         <p class="p-10 text-center">No hay comentarios aún.</p>
                     @endif
                 </div>
+
 
             </div>
         </div>
