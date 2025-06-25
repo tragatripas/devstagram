@@ -44,10 +44,20 @@
                     <p class="text-xl font-bold text-center mb-4">Agrega un nuevo comentario</p>
 
                     @if (session('mensaje'))
-                        <div class="bg-green-500 text-white p-2 rounded-lg mb-6 text-center uppercase font-bold">
+                        <div id="mensaje-flash" class="bg-green-500 text-white p-2 rounded-lg mb-6 text-center uppercase font-bold">
                             {{ session('mensaje') }}
                         </div>
-                        
+                        <script>
+                            setTimeout(() => {
+                                const mensaje = document.getElementById('mensaje-flash');
+                                if (mensaje) {
+                                    mensaje.style.transition = "opacity 0.5s ease";
+                                    mensaje.style.opacity = 0;
+
+                                    setTimeout(() => mensaje.remove(), 500); // lo quita del DOM tras desvanecer
+                                }
+                            }, 2000);
+                        </script>
                     @endif
 
                     <form action="{{ route('comentarios.store', ['post' => $post, 'user' => $user]) }}" method="POST">
